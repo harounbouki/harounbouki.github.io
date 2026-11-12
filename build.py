@@ -371,6 +371,29 @@ SITE_JS = r"""<script>
 </script>"""
 
 
+# ————————————————— البيانات المنظَّمة —————————————————
+
+def person_ld(site):
+    """الشخص صاحب الموقع، كما يُعرَّف لمحركات البحث وأجوبة الذكاء الاصطناعي."""
+    base, pr = base_url(site), site.get("person", {})
+    d = {"@type": "Person", "@id": f"{base}#person", "name": site["author"], "url": base}
+    for k in ("alternateName", "jobTitle", "description", "sameAs", "knowsLanguage"):
+        if pr.get(k):
+            d[k] = pr[k]
+    if pr.get("location"):
+        d["homeLocation"] = {"@type": "Place", "name": pr["location"]}
+    if pr.get("image"):
+        d["image"] = base + pr["image"]
+    return d
+
+
+def website_ld(site):
+    base = base_url(site)
+    return {"@type": "WebSite", "@id": f"{base}#website", "url": base, "name": site["title"],
+            "alternateName": site.get("home_title", ""), "inLanguage": "ar",
+            "description": site["description"], "publisher": {"@id": f"{base}#person"}}
+
+
 # ————————————————— القالب العام —————————————————
 
 def news_on(site):
@@ -392,7 +415,7 @@ def base_url(site):
     return site["url"].rstrip("/") + "/" if site.get("url") else ""
 
 
-def page(site, root, title, description, body, current="", og_type="website", path="", og_image="", extra=""):
+def page(site, root, title, description, body, current="", og_type="website", path="", og_image="", extra="", ld=None):
     nav = nav_items(site)
     links = "\n        ".join(
         f'<a class="nav__link" href="{href(root, p)}"'
@@ -416,7 +439,14 @@ def page(site, root, title, description, body, current="", og_type="website", pa
         head += (f'<link rel="alternate" type="application/rss+xml" title="{esc(site["title"])}" '
                  f'href="{base}feed.xml">\n')
         foot_links += f'\n          <a href="{base}feed.xml">خلاصة RSS</a>'
-    full_title = title if title == site["title"] else f'{title} | {site["title"]}'
+    if title == site["title"]:
+        full_title = site.get("home_title") or title
+    else:
+        full_title = f'{title} | {site.get("title_suffix") or site["title"]}'
+    if ld:                                   # بيانات منظَّمة لمحركات البحث (schema.org)
+        head += ('<script type="application/ld+json">'
+                 + json.dumps(ld, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+                 + '</script>\n')
     palette = site.get("palette", "cream")
     img_mode = "" if site.get("image_treatment", True) else ' data-img="raw"'
     return f"""<!DOCTYPE html>
@@ -793,7 +823,8 @@ def build():
     if q.get("text"):
         by = f'<p class="pull__by meta">{esc(q["by"])}</p>' if q.get("by") else ""
         body += f'<section class="pull">\n  <div class="wrap">\n    <p class="pull__q">{esc(q["text"])}</p>\n    {by}\n  </div>\n</section>\n'
-    write("index.html", page(site, root, site["title"], site["description"], body, "home"))
+    home_ld = {"@context": "https://schema.org", "@graph": [website_ld(site), person_ld(site)]} if base else None
+    write("index.html", page(site, root, site["title"], site["description"], body, "home", ld=home_ld))
     urls.append("")
 
     # ——— التدوينات ———
@@ -846,6 +877,12 @@ def build():
         write(rel + "index.html",
               page(site, root, p["title"], p["excerpt"], body, og_type="article", path=rel,
                    og_image=f"assets/og/{p['slug']}.png",
+                   ld=({"@context": "https://schema.org", "@type": "BlogPosting", "headline": p["title"],
+                        "description": p["excerpt"], "datePublished": p["date"].isoformat(),
+                        "inLanguage": "ar", "url": base + rel, "mainEntityOfPage": base + rel,
+                        "image": base + f"assets/og/{p['slug']}.png",
+                        "author": person_ld(site), "publisher": {"@id": f"{base}#person"},
+                        "isPartOf": {"@id": f"{base}#website"}} if base else None),
                    extra='<div class="progress" id="progress" aria-hidden="true"></div>\n'))
         urls.append(rel)
 
@@ -929,8 +966,12 @@ def build():
   </div>
 </article>
 """
+        page_ld = None
+        if name == "about" and base:
+            page_ld = {"@context": "https://schema.org", "@type": "ProfilePage", "url": f"{base}about/",
+                       "inLanguage": "ar", "mainEntity": person_ld(site)}
         write(f"{name}/index.html", page(site, root, title, meta.get("description", site["description"]),
-                                         body, key, path=f"{name}/"))
+                                         body, key, path=f"{name}/", ld=page_ld))
         urls.append(f"{name}/")
 
     # ——— النشرة (تُبنى فقط حين تُفعَّل في site.json) ———
