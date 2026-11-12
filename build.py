@@ -249,8 +249,9 @@ def hero_visual(site, posts, root, notes=()):
     if kind == "photo" and site["hero"].get("photo"):
         return f'<div class="hero__visual portrait">{picture(root + site["hero"]["photo"], site["author"])}</div>'
     if kind == "sketch" and site["hero"].get("sketch"):
-        return (f'<div class="hero__visual sketchp"><img src="{root}{esc(site["hero"]["sketch"])}" '
-                f'alt="رسم لصاحب المدونة {esc(site["author"])}"></div>')
+        return (f'<div class="hero__visual sketchp" data-motion="ink"><img src="{root}{esc(site["hero"]["sketch"])}" '
+                f'alt="رسم لصاحب المدونة {esc(site["author"])}"></div>'
+                f'<script src="{root}assets/js/portrait.js" defer></script>')
     if kind == "notes" and notes:
         slips = ""
         for i, n in enumerate(list(notes)[:3], 1):
@@ -724,6 +725,8 @@ def build():
     (DIST / "assets" / "css").mkdir(parents=True)
     shutil.copy(THEME / "style.css", DIST / "assets" / "css" / "style.css")
     shutil.copy(THEME / "favicon.svg", DIST / "assets" / "favicon.svg")
+    (DIST / "assets" / "js").mkdir(parents=True)
+    shutil.copy(THEME / "portrait.js", DIST / "assets" / "js" / "portrait.js")
     if ASSETS.exists():
         shutil.copytree(ASSETS, DIST / "assets", dirs_exist_ok=True)
     (DIST / ".nojekyll").write_text("", encoding="utf-8")
@@ -902,8 +905,16 @@ def build():
         fig = (f'<figure class="article__fig article__fig--portrait">{picture(root + meta["image"], title)}</figure>'
                if meta.get("image") else "")
         if meta.get("sketch"):       # رسم جاهز بخلفية شفافة: يُعرض كما هو بلا صبغة
-            fig = (f'<figure class="article__sketch"><span class="sketchp">'
-                   f'<img src="{root}{esc(meta["sketch"])}" alt="رسم لصاحب المدونة"></span></figure>')
+            motion = meta.get("sketch_motion", "")
+            attrs, cap, js = "", "", ""
+            if motion == "letters":  # وجه من حروف عناوين التدوينات
+                words = " ".join(p["title"] for p in posts) + " " + site["title"]
+                attrs = f' data-motion="letters" data-letters="{esc(words)}"'
+                cap = '<figcaption class="article__sketchcap">وجهٌ من حروف تدويناتي. مرّر عليه.</figcaption>'
+            if motion:
+                js = f'<script src="{root}assets/js/portrait.js" defer></script>'
+            fig = (f'<figure class="article__sketch article__sketch--{esc(motion or "still")}"><span class="sketchp"{attrs}>'
+                   f'<img src="{root}{esc(meta["sketch"])}" alt="رسم لصاحب المدونة"></span>{cap}</figure>{js}')
         stamp_html = f'<p class="meta article__meta">{stamp}</p>' if stamp else ""
         body = f"""<article class="article">
   <div class="wrap">
