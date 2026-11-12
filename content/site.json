@@ -34,7 +34,7 @@
     "by": ""
   },
   "newsletter": {
-    "enabled": false,
+    "enabled": true,
     "title": "أخبرك حين أنشر",
     "body": "تدوينة أو اثنتان في الشهر. يصلك سطران ورابط حين تُنشر، ولا شيء غير ذلك.",
     "button": "أخبرني",
@@ -43,8 +43,9 @@
     "page_intro": "",
     "points": [],
     "url": "",
-    "form_action": "",
-    "form_field": "email_address"
+    "form_action": "https://app.kit.com/forms/10179628/subscriptions",
+    "form_field": "email_address",
+    "nav_label": "اشترك"
   },
   "analytics_snippet": "",
   "thirties": {
