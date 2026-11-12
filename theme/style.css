@@ -427,6 +427,12 @@ img { max-width: 100%; height: auto; display: block; }
 .sketchp img { position: relative; width: 100%; }
 .article__sketch { margin: 0 auto 2.5rem; display: grid; justify-items: center; }
 .article__sketch .sketchp { width: 15rem; }
+.article__sketch--letters .sketchp { width: min(100%, 21rem); }
+.article__sketchcap { margin-top: -1.75rem; font-size: .85rem; color: var(--ink-faint); text-align: center; }
+/* الحركة: اللوحة تحلّ محلّ الصورة والقرص أثناء العرض (portrait.js) */
+.sketchp canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; }
+.sketchp.is-motion::before { opacity: 0; }
+.sketchp.is-motion img { visibility: hidden; }
 @media (max-width: 60rem) {
   .hero__visual.sketchp { display: block; order: -1; justify-self: start; width: 9.5rem; margin-bottom: -1rem; }
 }
