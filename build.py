@@ -562,9 +562,10 @@ def load_posts():
             "excerpt": meta.get("excerpt") or " ".join(plain.split()[:32]) + "…",
             "image": meta.get("image", ""), "topic": meta.get("topic", ""),
             "teaser": meta.get("teaser", ""),
+            "order": int(meta.get("order") or 0),   # ترتيب تدوينات اليوم الواحد
             "body_md": body, "reading": reading_time(plain),
         })
-    posts.sort(key=lambda p: (p["date"], p["slug"]), reverse=True)
+    posts.sort(key=lambda p: (p["date"], p["order"], p["slug"]), reverse=True)
     for i, p in enumerate(posts):          # الأقدم يحمل الرقم 001
         p["num"] = len(posts) - i
     return posts
