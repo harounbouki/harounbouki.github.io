@@ -1,7 +1,7 @@
 {
   "title": "كاتب ثلاثيني",
   "author": "هارون بوكي",
-  "description": "توثيق لرحلة الثلاثينات ومواقف الحياة فيها.",
+  "description": "مدونة هارون بوكي، كاتب من الجزائر يوثّق سنوات الثلاثين: الأبوّة والبساطة ومواقف الحياة.",
   "palette": "cream",
   "image_treatment": true,
   "thirtieth_birthday": "2024-08",
@@ -52,5 +52,27 @@
     "turned_thirty": "",
     "intro": "التدوينات مرتّبة بسنوات العمر، وكل سنة فصل.",
     "chapters": {}
+  },
+  "home_title": "هارون بوكي | كاتب ثلاثيني",
+  "title_suffix": "هارون بوكي",
+  "person": {
+    "alternateName": [
+      "Haroun Bouki",
+      "هارون"
+    ],
+    "jobTitle": "مستشار تسويق بالمحتوى لخبراء الموارد البشرية والتدريب والتطوير",
+    "description": "هارون بوكي (Haroun Bouki) كاتب من الجزائر، ومستشار تسويق بالمحتوى لخبراء الموارد البشرية والتدريب والتطوير. يبني للخبراء نشرات بريدية وأنظمة محتوى، ويكتب في هذه المدونة عن سنوات الثلاثين.",
+    "sameAs": [
+      "https://www.linkedin.com/in/harounbouki/",
+      "https://writer30.nashra.website/",
+      "https://harounmo7tawa.wordpress.com/"
+    ],
+    "knowsLanguage": [
+      "ar",
+      "fr",
+      "en"
+    ],
+    "location": "الجزائر",
+    "image": "assets/images/haroun-sketch.png"
   }
 }
