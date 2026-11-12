@@ -1,0 +1,6 @@
+dist/
+dist-local/
+.og/
+mail/
+node_modules/
+__pycache__/
