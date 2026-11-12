@@ -2,6 +2,7 @@
 title: عني
 description: هارون بوكي، كاتب من الجزائر يوثّق سنوات الثلاثين.
 sketch: assets/images/haroun-sketch.png
+sketch_motion: letters
 ---
 
 اسمي هارون بوكي. كاتب من الجزائر، دخلت الثلاثين صيف 2024.
