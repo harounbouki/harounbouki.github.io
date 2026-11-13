@@ -75,5 +75,22 @@
     "location": "الجزائر",
     "image": "assets/images/haroun-sketch.png"
   },
-  "site_name": "هارون بوكي"
+  "site_name": "هارون بوكي",
+  "elsewhere": [
+    {
+      "label": "التسويق بالمحتوى للخبراء",
+      "url": "https://writer30.nashra.website/"
+    },
+    {
+      "label": "لينكدإن",
+      "url": "https://www.linkedin.com/in/harounbouki/"
+    }
+  ],
+  "work_card": {
+    "kicker": "عملي",
+    "title": "هارون بوكي | أنظمة محتوى الخبراء",
+    "body": "نشرة لخبراء الموارد البشرية والتدريب والتطوير: كيف تبني نشرة بريدية ونظام محتوى يسوّق خبرتك ويجعل العميل يطلبك بالاسم.",
+    "cta": "تعرّف على عملي",
+    "url": "https://writer30.nashra.website/"
+  }
 }
