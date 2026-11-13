@@ -395,6 +395,34 @@ def website_ld(site):
             "description": site["description"], "publisher": {"@id": f"{base}#person"}}
 
 
+def elsewhere_col(site):
+    """عمود «في مكان آخر» في التذييل: روابط خارجية دائمة (النشرة المهنية، لينكدإن)."""
+    items = site.get("elsewhere") or []
+    if not items:
+        return ""
+    links = "\n          ".join(
+        f'<a href="{esc(i["url"])}" rel="me noopener" target="_blank">{esc(i["label"])} <span aria-hidden="true">↗</span></a>'
+        for i in items)
+    return f"""
+      <div>
+        <p class="footer__h">في مكان آخر</p>
+        <div class="footer__list">
+          {links}
+        </div>
+      </div>"""
+
+
+def work_card(site):
+    """بطاقة النشرة المهنية داخل صفحة «عني» (تحلّ محلّ السطر [[work-card]])."""
+    w = site.get("work_card")
+    if not w:
+        return ""
+    return (f'<aside class="workcard"><p class="workcard__k">{esc(w.get("kicker", ""))}</p>'
+            f'<p class="workcard__t">{esc(w["title"])}</p><p class="workcard__b">{esc(w["body"])}</p>'
+            f'<a class="workcard__cta" href="{esc(w["url"])}" rel="me noopener" target="_blank">'
+            f'{esc(w.get("cta", "اقرأ النشرة"))} <span aria-hidden="true">←</span></a></aside>')
+
+
 # ————————————————— القالب العام —————————————————
 
 def news_on(site):
@@ -496,7 +524,7 @@ def page(site, root, title, description, body, current="", og_type="website", pa
         <div class="footer__list">
           {foot_links}
         </div>
-      </div>
+      </div>{elsewhere_col(site)}
     </div>
     <div class="footer__bottom meta">
       <span>© {date.today().year} {esc(site["author"])}</span>
@@ -968,7 +996,7 @@ def build():
     </header>
     {fig}
     <div class="prose">
-{markdown(md, root)}
+{markdown(md, root).replace("<p>[[work-card]]</p>", work_card(site))}
     </div>
   </div>
 </article>
