@@ -957,7 +957,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .footer__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: 2.5rem;
 }
 .footer__name { font-family: var(--font-display); font-size: var(--step-1); margin-bottom: .75rem; }
@@ -976,6 +976,24 @@ img { max-width: 100%; height: auto; display: block; }
   flex-wrap: wrap;
 }
 @media (max-width: 40rem) { .footer__grid { grid-template-columns: 1fr; gap: 2rem; } }
+
+/* بطاقة النشرة المهنية في صفحة «عني» */
+.workcard {
+  margin: 2rem 0;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--rule);
+  border-inline-start: 3px solid var(--gold);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--paper) 88%, #fff);
+}
+.prose .workcard p { margin: 0; }
+.workcard__k { font-family: var(--font-ui); font-size: var(--step--1); color: var(--ink-faint); letter-spacing: .04em; }
+.prose .workcard .workcard__t { font-family: var(--font-display); font-size: var(--step-1); color: var(--accent); margin: .35rem 0 .5rem; line-height: 1.4; }
+.workcard__b { color: var(--ink-soft); font-size: .9688rem; line-height: 1.9; }
+.prose .workcard .workcard__cta {
+  display: inline-block; margin-top: 1rem; font-family: var(--font-ui); font-size: .9375rem;
+  color: var(--paper); background: var(--accent); padding: .55rem 1.1rem; border-radius: 999px; text-decoration: none;
+}
 
 
 /* ——— 11ب. إضافات: الصور، صفحة التدوينة، الفصول، الدفتر ——— */
