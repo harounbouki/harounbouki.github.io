@@ -389,8 +389,9 @@ def person_ld(site):
 
 def website_ld(site):
     base = base_url(site)
-    return {"@type": "WebSite", "@id": f"{base}#website", "url": base, "name": site["title"],
-            "alternateName": site.get("home_title", ""), "inLanguage": "ar",
+    alt = [x for x in (site["title"], site.get("person", {}).get("alternateName", [None])[0]) if x]
+    return {"@type": "WebSite", "@id": f"{base}#website", "url": base,
+            "name": site.get("site_name") or site["title"], "alternateName": alt, "inLanguage": "ar",
             "description": site["description"], "publisher": {"@id": f"{base}#person"}}
 
 
@@ -459,9 +460,11 @@ def page(site, root, title, description, body, current="", og_type="website", pa
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:type" content="{og_type}">
-<meta property="og:site_name" content="{esc(site["title"])}">
+<meta property="og:site_name" content="{esc(site.get("site_name") or site["title"])}">
 <meta name="theme-color" content="{PALETTES.get(palette, "#F6EDE3")}">
 <link rel="icon" href="{root}assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{root}assets/favicon-96.png" type="image/png" sizes="96x96">
+<link rel="apple-touch-icon" href="{root}apple-touch-icon.png">
 {head}<link rel="stylesheet" href="{root}assets/css/style.css">
 {BOOT}
 {site.get("analytics_snippet", "")}
@@ -755,6 +758,10 @@ def build():
     (DIST / "assets" / "css").mkdir(parents=True)
     shutil.copy(THEME / "style.css", DIST / "assets" / "css" / "style.css")
     shutil.copy(THEME / "favicon.svg", DIST / "assets" / "favicon.svg")
+    for f in ("favicon-96.png",):                            # أيقونة PNG لمحرك Google
+        shutil.copy(THEME / f, DIST / "assets" / f)
+    for f in ("apple-touch-icon.png",):                      # تُطلب من جذر الموقع مباشرة
+        shutil.copy(THEME / f, DIST / f)
     (DIST / "assets" / "js").mkdir(parents=True)
     shutil.copy(THEME / "portrait.js", DIST / "assets" / "js" / "portrait.js")
     if ASSETS.exists():
