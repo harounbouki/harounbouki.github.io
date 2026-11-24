@@ -377,7 +377,7 @@ def person_ld(site):
     """الشخص صاحب الموقع، كما يُعرَّف لمحركات البحث وأجوبة الذكاء الاصطناعي."""
     base, pr = base_url(site), site.get("person", {})
     d = {"@type": "Person", "@id": f"{base}#person", "name": site["author"], "url": base}
-    for k in ("alternateName", "jobTitle", "description", "sameAs", "knowsLanguage"):
+    for k in ("alternateName", "jobTitle", "description", "disambiguatingDescription", "sameAs", "knowsLanguage"):
         if pr.get(k):
             d[k] = pr[k]
     if pr.get("location"):
