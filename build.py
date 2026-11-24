@@ -423,6 +423,23 @@ def work_card(site):
             f'{esc(w.get("cta", "اقرأ النشرة"))} <span aria-hidden="true">←</span></a></aside>')
 
 
+def analytics(site):
+    """قياس الزيارات بـ Cloudflare Web Analytics، مع استثناء صاحب الموقع.
+    زيارة الموقع مرة بـ ?notrack توقف حساب زياراتك في ذلك المتصفح، و ?track تعيده."""
+    token = (site.get("cf_analytics_token") or "").strip()
+    if not token or LOCAL:
+        return site.get("analytics_snippet", "")
+    beacon = json.dumps({"token": token})
+    return ("<script>(function(){try{var q=location.search;"
+            "if(/[?&]notrack(=|&|$)/.test(q))localStorage.setItem('notrack','1');"
+            "if(/[?&]track(=|&|$)/.test(q))localStorage.removeItem('notrack');"
+            "if(localStorage.getItem('notrack')==='1')return;}catch(e){}"
+            "var s=document.createElement('script');s.type='module';"
+            "s.src='https://static.cloudflareinsights.com/beacon.min.js';"
+            f"s.setAttribute('data-cf-beacon',{json.dumps(beacon)});"
+            "document.head.appendChild(s);})();</script>")
+
+
 # ————————————————— القالب العام —————————————————
 
 def news_on(site):
@@ -495,7 +512,7 @@ def page(site, root, title, description, body, current="", og_type="website", pa
 <link rel="apple-touch-icon" href="{root}apple-touch-icon.png">
 {head}<link rel="stylesheet" href="{root}assets/css/style.css">
 {BOOT}
-{site.get("analytics_snippet", "")}
+{analytics(site)}
 </head>
 <body>
 {extra}<header class="nav">
